@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wishlist | GlamBeauty</title>
+  <link rel="stylesheet" href="style.css">
+   
+ 
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .dark-mode {
+      background-color: #222;
+      color: hsl(160, 100%, 99%);
+    }
+
+    header {
+      background-color: #ff69b4;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .wishlist-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .wishlist-card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 200px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode .wishlist-card {
+      background-color: #333;
+      border-color: #555;
+      color: #f2f4f3;
+    }
+
+    .wishlist-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .wishlist-card h3 {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .wishlist-card button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    footer {
+      background-color: #ff69b4;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    button.toggle-mode {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  
+  .dark-mode {
+  background-color: #222;
+  color: hsl(0, 96%, 48%);
+}
+ 
+  </style>
+</head>
+<body>
+  <button onclick="toggleDarkMode()">🌓 Dark Mode</button>
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+
+  <header>
+    <div class="logo">GlamBeauty</div>
+    <nav>
+      <a href="home page.html">Home</a>
+      <a href="SHOP.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="CART.HTML 2.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section id="wishlist">
+    <h2 style="text-align:center; margin-top:20px;">💖 My Wishlist</h2>
+    <div class="wishlist-container" id="wishlist-container"></div>
+  </section>
+
+  <script>
+    // Render wishlist items
+    window.addEventListener('DOMContentLoaded', () => {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const container = document.getElementById('wishlist-container');
+
+      if (container) {
+        if (wishlist.length === 0) {
+          container.innerHTML = '<p>Your wishlist is empty.</p>';
+        } else {
+          wishlist.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'wishlist-card';
+
+            card.innerHTML = `
+              <img src="${item.image}" alt="${item.name}">
+              <h3>${item.name}</h3>
+              <p>${item.price}</p>
+              <button onclick="moveToCart(${index})">Move to Cart</button>
+              <button onclick="removeFromWishlist(${index})">Remove</button>
+            `;
+
+            container.appendChild(card);
+          });
+        }
+      }
+    });
+
+    function removeFromWishlist(index) {
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlist.splice(index, 1);
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      location.reload();
+    }
+
+    function moveToCart(index) {
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      cart.push(wishlist[index]);
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      wishlist.splice(index, 1);
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+      location.reload();
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 GlamBeauty. All rights reserved.</p>
+  </footer>
+</body>
+</html>

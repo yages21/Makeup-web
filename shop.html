@@ -1,0 +1,181 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shop | GlamBeauty</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+    <style>
+        .toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+  .dark-mode {
+  background-color: #222;
+  color: #fd3c06;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+  </style>
+
+
+  <button onclick="toggleDarkMode()">🌓  Dark Mode</button>
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+  <header>
+    <div id="toast" class="toast">Item added to wishlist!</div>
+    <div class="logo">GlamBeauty</div>
+    <nav>
+      <a href="home page.html">Home</a>
+      <a href="SHOP.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section class="categories">
+  <h2>Makeup Categories</h2>
+  <div class="category-grid">
+    <div class="category"><a href="#face"><strong>Face</strong></a></div>
+    <div class="category"><a href="#eyes"><strong>Eyes</strong></a></div>
+    <div class="category"><a href="#lips"><strong>Lips</strong></a></div>
+   
+  </div>
+</section>
+
+ <section class="featured">
+  <h2>All Products</h2>
+
+  <!-- FACE PRODUCTS -->
+  <div class="category-section" id="face">
+    <h3>✨ Face Products</h3>
+    <div class="product-grid">
+      <div class="product">
+        <img src="FOUNDATION.jpg" alt="Foundation" style="width: 200px;">
+        <p>Rare Beauty Foundation</p>
+        <p>RM 150</p>
+        <button class="add-to-wishlist"
+  data-product="Foundation"
+  data-image="FOUNDATION.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="CONCE.jpeg.jpg" alt="Concealer" style="width: 200px;">
+        <p>Concealer</p>
+        <p>RM 95.90</p>
+       <button class="add-to-wishlist"
+  data-product="Concealer"
+  data-image="CONCE.jpeg.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="Blushes.jpg" alt="Blush" style="width: 200px;">
+        <p>Blush</p>
+        <p>RM 75.90</p>
+        <button class="add-to-wishlist"
+  data-product="Blush"
+  data-image="Blushes.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="Setting Powders.webp" alt="Setting Powder" style="width: 200px;">
+        <p>Setting Powder</p>
+        <p>RM 65.60</p>
+      <button class="add-to-wishlist"
+  data-product="Setting Powder"
+  data-image="Setting Powders.webp"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="Makeup Removers.jpg" alt="Remover" style="width: 200px;">
+        <p>Makeup Remover</p>
+        <p>RM 125</p>
+       <button class="add-to-wishlist"
+  data-product="Remover"
+  data-image="Makeup Removers.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="Setting Sprays.webp" alt="Setting Spray" style="width: 200px;">
+        <p>Setting Spray</p>
+        <p>RM 55.20</p>
+        <a href="#" class="btn">Add to Cart</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- EYE PRODUCTS -->
+  <div class="category-section" id="eyes">
+    <h3>👁️ Eye Products</h3>
+    <div class="product-grid">
+      <div class="product">
+        <img src="Eyeshadow Palettes.JPG" alt="Eyeshadow" style="width: 200px;">
+        <p>Eyeshadow Palette</p>
+        <p>RM 99.90</p>
+      <button class="add-to-wishlist"
+  data-product="Eyeshadow"
+  data-image="Eyeshadow Palettes.JPG"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+      <div class="product">
+        <img src="Mascara.jpg" alt="Mascara" style="width: 200px;">
+        <p>Mascara</p>
+        <p>RM 20</p>
+   <button class="add-to-wishlist"
+  data-product="Mascara"
+  data-image="Mascara.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIP PRODUCTS -->
+  <div class="category-section" id="lips">
+    <h3>💄 Lip Products</h3>
+    <div class="product-grid">
+      <div class="product">
+        <img src="LIPSTICK.jpg" alt="Lipstick" style="width: 200px;">
+        <p>Huda Beauty Lipstick</p>
+        <p>RM 74.20</p>
+        <button class="add-to-wishlist"
+  data-product="Lipstick"
+  data-image="LIPSTICK.jpg"
+  data-price="RM 88">Add to Wishlist</button>
+      </div>
+   
+  </div>
+</section>
+
+    
+
+  </div>
+</section>
+  <footer>
+    <p>&copy; 2025 GlamBeauty. All rights reserved.</p>
+    <script src="CART.JS"></script>
+  </footer>
+  
+</body>
+</html>

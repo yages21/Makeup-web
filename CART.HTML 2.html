@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart | GlamBeauty</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .dark-mode {
+      background-color: #222;
+      color: hsl(160, 100%, 99%);
+    }
+
+    header {
+      background-color: #ff69b4;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .cart-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .cart-card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 200px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode .cart-card {
+      background-color: #333;
+      border-color: #555;
+      color: #f2f4f3;
+    }
+
+    .cart-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .cart-card h3 {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .cart-card button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #total-price {
+      font-size: 1.2em;
+      margin: 20px;
+      text-align: center;
+    }
+
+    #checkout-btn {
+      display: block;
+      margin: 0 auto 40px;
+      padding: 10px 20px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #ff69b4;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    button.toggle-mode {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .summary-table {
+      margin: 20px auto;
+      width: 80%;
+      border-collapse: collapse;
+    }
+
+    .summary-table th, .summary-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .summary-table th {
+      background-color: #ff69b4;
+      color: white;
+    }
+
+    #search-bar {
+      display: block;
+      margin: 20px auto;
+      padding: 8px;
+      width: 60%;
+      font-size: 1em;
+    }
+
+    .floating-cart {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ff69b4;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <button onclick="toggleDarkMode()">🌓 Dark Mode</button>
+
+  <header>
+    <div class="logo">GlamBeauty</div>
+    <nav>
+      <a href="home page.html">Home</a>
+      <a href="SHOP.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="CART.HTML 2.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <h2 style="text-align:center; margin-top:20px;">🛒 My Cart</h2>
+  <input type="text" id="search-bar" placeholder="🔍 Search product name..." oninput="renderCart(currentFilter)">
+  <div class="cart-container" id="cart-container"></div>
+
+  <div style="text-align:center; margin-top:20px;">
+    <label for="promo">🎟 Promo Code:</label>
+    <input type="text" id="promo" placeholder="Enter code">
+    <button onclick="applyPromo()">Apply</button>
+  </div>
+
+  <div id="total-price" style="text-align:center; margin-top:10px;"></div>
+  <button id="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+
+  <div class="floating-cart" id="floating-cart">🛍 Items: 0</div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let discount = 0;
+    let currentFilter = null;
+
+    function renderCart(filterType = null) {
+      currentFilter = filterType;
+      const container = document.getElementById('cart-container');
+      const totalPriceEl = document.getElementById('total-price');
+      const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+      container.innerHTML = '';
+      let total = 0;
+      let itemCount = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty.</p>';
+        totalPriceEl.textContent = '';
+        document.getElementById('checkout-btn').style.display = 'none';
+        document.getElementById('floating-cart').textContent = '🛍 Items: 0';
+        return;
+      }
+
+      const grouped = {};
+      cart.forEach(item => {
+        const type = item.type || 'Other';
+        if (!grouped[type]) grouped[type] = [];
+        grouped[type].push(item);
+      });
+
+      const filterContainer = document.createElement('div');
+      filterContainer.style.textAlign = 'center';
+      filterContainer.style.marginBottom = '20px';
+      filterContainer.innerHTML = `<strong>Filter by Type:</strong> `;
+      Object.keys(grouped).forEach(type => {
+        const btn = document.createElement('button');
+        btn.textContent = type;
+        btn.style.margin = '0 5px';
+        btn.onclick = () => renderCart(type);
+        filterContainer.appendChild(btn);
+      });
+      const showAllBtn = document.createElement('button');
+      showAllBtn.textContent = 'Show All';
+      showAllBtn.onclick = () => renderCart(null);
+      filterContainer.appendChild(showAllBtn);
+      container.appendChild(filterContainer);
+
+      Object.entries(grouped).forEach(([type, items]) => {
+        if (filterType && type !== filterType) return;
+
+        items.forEach((item, index) => {
+          if (searchQuery && !item.name.toLowerCase().includes(searchQuery)) return;
+
+          const card = document.createElement('div');
+          card.className = 'cart-card';
+
+          const priceValue = parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
+          const quantity = item.quantity || 1;
+          const itemTotal = priceValue * quantity;
+          total += itemTotal;
+          itemCount += quantity;
+
+          card.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <p><strong>Type:</strong> ${item.type || 'N/A'}</p>
+            <p>RM ${priceValue.toFixed(2)} x 
+              <input type="number" min="1" value="${quantity}" onchange="updateQuantity(${index}, this.value)">
+            </p>
+            <p><strong>Subtotal: RM ${itemTotal.toFixed(2)}</strong></p>
+            <button onclick="removeFromCart(${index})">Remove</button>
+          `;
+          container.appendChild(card);
+        });
+      });
+
+      if (discount > 0) {
+        const discountedTotal = total - (total * discount);
+        totalPriceEl.innerHTML = `
+          <p>Original Total: RM ${total.toFixed(2)}</p>
+          <p>Discount (${discount * 100}%): - RM ${(total * discount).toFixed(2)}</p>
+          <strong>Total After Discount: RM ${discountedTotal.toFixed(2)}</strong>
+        `;
+      } else {
+    totalPriceEl.textContent = `Total: RM ${total.toFixed(2)}`;  
+    }
+
+    document.getElementById('floating-cart').textContent = `🛍 Items: ${itemCount}`; 
+    document.getElementById('checkout-btn').style.display = 'block';
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promo').value.trim().toUpperCase();
+
+      if (code === "GLAM10") {
+        discount = 0.10;
+        alert("🎉 Promo code applied! 10% discount.");
+      } else if (code === "GLAM20") {
+        discount = 0.20;
+        alert("🎉 Promo code applied! 20% discount.");
+      } else {
+        discount = 0;
+        alert("❌ Invalid promo code.");
+      }
+
+      renderCart(currentFilter);
+    }
+
+    function updateQuantity(index, newQty) {
+      newQty = parseInt(newQty);
+      if (newQty > 0) {
+        cart[index].quantity = newQty;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart(currentFilter);
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart(currentFilter);
+    }
+
+    function checkout() {
+      alert("🛒 Checkout complete! Thank you for shopping with GlamBeauty.");
+      localStorage.removeItem('cart');
+      location.reload();
+    }
+
+    window.onload = () => {
+      renderCart();
+    };
+  </script>
+</body>
+</html>

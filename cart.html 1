@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart | GlamBeauty</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+      body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .dark-mode {
+      background-color: #222;
+      color: hsl(160, 100%, 99%);
+    }
+
+    header {
+      background-color: #ff69b4;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .cart-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .cart-card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 200px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode .cart-card {
+      background-color: #333;
+      border-color: #555;
+      color: #f2f4f3;
+    }
+
+    .cart-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .cart-card h3 {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .cart-card button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #total-price {
+      font-size: 1.2em;
+      margin: 20px;
+      text-align: center;
+    }
+
+    #checkout-btn {
+      display: block;
+      margin: 0 auto 40px;
+      padding: 10px 20px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #ff69b4;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    button.toggle-mode {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="toggleDarkMode()">🌓 Dark Mode</button>
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+
+  <header>
+    <div class="logo">GlamBeauty</div>
+    <nav>
+      <a href="home page.html">Home</a>
+      <a href="SHOP.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+  
+
+  <section id="cart">
+    <h2 style="text-align:center; margin-top:20px;">🛒 My Cart</h2>
+    <div class="cart-container" id="cart-container"></div>
+    <div id="total-price"></div>
+    <button id="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+  </section>
+
+  <script>
+    // Render cart items and calculate total
+    window.addEventListener('DOMContentLoaded', () => {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cart-container');
+      const totalPriceEl = document.getElementById('total-price');
+
+      let total = 0;
+
+      if (container) {
+        if (cart.length === 0) {
+          container.innerHTML = '<p>Your cart is empty.</p>';
+          totalPriceEl.textContent = '';
+          document.getElementById('checkout-btn').style.display = 'none';
+        } else {
+          cart.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'cart-card';
+
+            card.innerHTML = `
+              <img src="${item.image}" alt="${item.name}">
+              <h3>${item.name}</h3>
+              <p>${item.price}</p>
+              <button onclick="removeFromCart(${index})">Remove</button>
+            `;
+
+            container.appendChild(card);
+
+            const priceValue = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+            total += priceValue;
+          });
+
+          totalPriceEl.textContent = `Total: RM ${total.toFixed(2)}`;
+        }
+      }
+    });
+
+    function removeFromCart(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      location.reload();
+    }
+
+    function checkout() {
+      alert("Thank you for shopping with GlamBeauty! Your order has been placed.");
+      localStorage.removeItem('cart');
+      location.reload();
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 GlamBeauty. All rights reserved.</p>
+  </footer>
+</body>
+</html>
